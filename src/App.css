@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import 'tailwindcss';
+
+@theme {
+  /* Color Tokens */
+  --color-brand-primary: #080331;
+  --color-brand-secondary: #f2f6ff;
+
+  --color-accent-blue: #1267dd;
+  --color-accent-blue-light: #eff4fb;
+  --color-accent-green: #07a49a;
+  --color-accent-green-light: #ecf7f7;
+  --color-accent-purple: #7327f0;
+  --color-accent-purple-light: #f6f2fd;
+
+  --color-neutral-white: #ffffff;
+  --color-neutral-light-white: #f7f7f7;
+  --color-neutral-black: #000000;
+  --color-neutral-element-black: #1a1a1a;
+  --color-neutral-light-black: #0f0f0f;
+  --color-neutral-neutral-black: #080808;
+  --color-neutral-gray-base: #666666;
+  --color-neutral-gray-light: #999999;
+
+  --color-border-light: #e5e5e5;
+  --color-border-regular: #d9d9d9;
+  --color-border-dark: #333333;
+
+  /* Menambahkan JetBrains Mono untuk utilitas font-mono */
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Global / Base overrides */
+@layer base {
+  body {
+    background-color: var(--color-neutral-light-white);
+    color: var(--color-neutral-element-black);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
