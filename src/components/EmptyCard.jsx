@@ -8,10 +8,10 @@ const EmptyCard = ({ searchTerm }) => {
           <ShieldCheck className="text-accent-green h-7 w-7" />
         </div>
         <h2 className="text-accent-green text-base font-bold">Calon Penyewa Aman</h2>
-        <p className="text-accent-green mt-0.5 text-[11px] font-semibold">Bebas dari Blacklist</p>
-        <div className="bg-neutral-white/50 mx-auto mt-4 max-w-xs rounded-lg border border-green-100 p-3.5">
+        <p className="text-accent-green mt-0.5 text-xs font-semibold">Bebas dari Blacklist</p>
+        <div className="bg-neutral-white/50 mx-auto mt-4 max-w-sm rounded-lg border border-green-100 p-3.5">
           <p className="text-neutral-element-black text-sm leading-relaxed">
-            Atas nama <span className="font-bold underline">"{searchTerm}"</span> tidak ditemukan dalam blacklist
+            Pencarian untuk <span className="font-bold underline">"{searchTerm}"</span> tidak ditemukan dalam blacklist
             rentcar. Calon penyewa ini aman untuk diproses lebih lanjut.
           </p>
         </div>

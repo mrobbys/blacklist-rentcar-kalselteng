@@ -8,7 +8,7 @@ const SearchBox = ({ value, onChange, children }) => {
       </div>
       <input
         type="text"
-        placeholder="Cari nama..."
+        placeholder="Cari nama atau nomor identitas calon penyewa..."
         value={value}
         onChange={onChange}
         className="border-border-regular bg-neutral-white text-neutral-element-black placeholder-neutral-gray-light focus:border-brand-primary focus:ring-brand-primary w-full rounded-xl border py-2.5 pr-10 pl-10 text-sm transition-all duration-150 outline-none focus:ring-1"

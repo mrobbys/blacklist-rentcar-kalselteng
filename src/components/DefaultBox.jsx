@@ -8,7 +8,7 @@ const DefaultBox = ({ totalBlacklistData }) => {
       </div>
       <h2 className="text-brand-primary text-center text-lg font-bold">Verifikasi Calon Penyewa</h2>
       <p className="text-neutral-gray-base mt-1 text-center text-sm leading-relaxed">
-        Silakan masukkan nama lengkap calon penyewa mobil pada kolom pencarian di atas untuk melakukan pemindaian rekam
+        Silakan masukkan nama lengkap atau nomor identitas calon penyewa mobil pada kolom pencarian di atas untuk melakukan pemindaian rekam
         jejak.
       </p>
       <div className="border-border-light bg-brand-secondary mt-8 w-full max-w-xs rounded-xl border p-5 text-center shadow-sm">

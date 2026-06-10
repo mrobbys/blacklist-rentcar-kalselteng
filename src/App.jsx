@@ -46,7 +46,8 @@ const App = () => {
 
     return blacklistData.filter((item) => {
       const name = item.NAMA ? item.NAMA.toLowerCase() : '';
-      return name.includes(query);
+      const noIdentitas = item.NO ? String(item.NO).toLowerCase() : '';
+      return name.includes(query) || noIdentitas.includes(query);
     });
   }, [searchTerm]);
 
