@@ -10,7 +10,7 @@ const CardList = ({ filteredData, totalCount, children }) => {
 
       {filteredData.map((item, index) => (
         <div
-          key={`${index}-${item.NO}`}
+          key={item.NO || index}
           className="border-border-light bg-neutral-white hover:border-brand-primary rounded-xl border p-5 shadow-sm transition-all duration-200"
         >
           {/* Header Card Start */}
