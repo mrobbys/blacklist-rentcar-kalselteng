@@ -33,6 +33,10 @@
 
 /* Global / Base overrides */
 @layer base {
+  * {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-neutral-light-white);
     color: var(--color-neutral-element-black);
