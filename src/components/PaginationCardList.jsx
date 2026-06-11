@@ -14,14 +14,21 @@ const PaginationCardList = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="border-border-light mt-6 flex items-center justify-between border-t py-6">
+    <nav
+      aria-label="Navigasi halaman hasil pencarian"
+      className="border-border-light mt-6 flex items-center justify-between border-t py-6"
+    >
       <BtnPagination
         onclick={prevPage}
         disabled={currentPage === 1}
         direction="prev"
       />
 
-      <span className="text-neutral-gray-base text-xs font-semibold">
+      <span
+        className="text-neutral-gray-base text-xs font-semibold"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         Halaman {currentPage} dari {totalPages}
       </span>
 
@@ -30,7 +37,7 @@ const PaginationCardList = ({ currentPage, totalPages, onPageChange }) => {
         disabled={currentPage === totalPages}
         direction="next"
       />
-    </div>
+    </nav>
   );
 };
 

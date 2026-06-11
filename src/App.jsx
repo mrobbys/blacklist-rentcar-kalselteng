@@ -1,89 +1,90 @@
-import { useState, useMemo, useEffect } from 'react';
-import blacklistData from './data/blacklistData.json';
+import { useEffect, useState } from 'react';
 import SearchBox from './components/SearchBox';
 import Header from './components/Header';
-import { debounce } from './utils';
+import { windowScrollToTop } from './utils';
 import DefaultBox from './components/DefaultBox';
-import BtnClearSearch from './components/BtnClearSearch';
 import CardList from './components/CardList';
 import EmptyCard from './components/EmptyCard';
 import PaginationCardList from './components/PaginationCardList';
- 
+import CardListSkeleton from './components/CardListSkeleton';
+import { useBlacklistSearch } from './hooks/useBlacklist';
+import { useSearchInput } from './hooks/useSearchInput';
+import BtnSearchActions from './components/BtnSearchActions';
+import CardRefetch from './components/CardRefetch';
+
 const App = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // set items per page
+  const itemsPerPage = 10;
 
-  const itemsPerPage = 5;
+  // state untuk notifikasi offline inline
+  const [isOffline, setIsOffline] = useState(false);
 
-  // otomatis scroll ke atas setiap currentPage berubah
+  // search custom hooks
+  const {
+    inputValue,
+    searchTerm,
+    currentPage,
+    setCurrentPage,
+    handleSearchChange,
+    handleClearSearch,
+    inputRef,
+    handleSearchSubmit,
+  } = useSearchInput();
+
+  // ? kode ini digunakan atau tidak yak🤔
+  // total count custom hooks
+  // const { totalDatabaseCount, isLoading: isCountLoading, isError: isCountError } = useTotalCount();
+
+  // blacklist search custom hooks
+  const { userList, totalCount, isLoading, isPlaceholderData, isError, isFetching, refetch } = useBlacklistSearch(
+    searchTerm,
+    currentPage,
+    itemsPerPage,
+  );
+  // hitung total pages
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+  // Scroll to top, behavior = 'instant'
   useEffect(() => {
-    window.scrollTo(0, 0);
+    windowScrollToTop();
   }, [currentPage]);
 
-  const debouncedSetSearch = useMemo(() => {
-    return debounce((value) => {
-      setSearchTerm(value);
-    });
-  }, []);
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    debouncedSetSearch(value);
-    setCurrentPage(1);
+  // handle form submit
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (isFetching) return;
+    if (!navigator.onLine) {
+      setIsOffline(true);
+      return;
+    }
+    setIsOffline(false);
+    handleSearchSubmit(e);
   };
 
-  const handleClearSearch = () => {
-    setInputValue('');
-    setSearchTerm('');
-    setCurrentPage(1);
-  };
+  // render konten utama
+  const renderContent = () => {
+    if (!searchTerm.trim()) {
+      return <DefaultBox />;
+    }
 
-  const filteredData = useMemo(() => {
-    const query = searchTerm.trim().toLowerCase();
-    if (!query) return [];
+    if (isLoading) {
+      return <CardListSkeleton />;
+    }
 
-    return blacklistData.filter((item) => {
-      const name = item.NAMA ? item.NAMA.toLowerCase() : '';
-      const noIdentitas = item.NO ? String(item.NO).toLowerCase() : '';
-      return name.includes(query) || noIdentitas.includes(query);
-    });
-  }, [searchTerm]);
+    if (isError) {
+      return <CardRefetch onClick={() => refetch()} />;
+    }
 
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredData.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredData, currentPage]);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-  return (
-    <div className="mx-auto flex min-h-dvh max-w-lg flex-col overflow-x-hidden">
-      <Header>
-        <SearchBox
-          value={inputValue}
-          onChange={handleSearchChange}
+    if (userList.length > 0) {
+      return (
+        <div
+          className={`transition-opacity duration-200 ${
+            isPlaceholderData ? 'pointer-events-none opacity-25' : 'opacity-100'
+          }`}
         >
-          {inputValue && <BtnClearSearch onClick={handleClearSearch} />}
-        </SearchBox>
-      </Header>
-
-      <main className="flex-1">
-        {!searchTerm.trim() ? (
-          /**
-           * Default Box
-           * Tampil ketika input search kosong
-           */
-          <DefaultBox totalBlacklistData={blacklistData.length} />
-        ) : filteredData.length > 0 ? (
-          /**
-           * Card List
-           * Tampil ketika pencarian ditemukan
-           */
           <CardList
-            filteredData={paginatedData}
-            totalCount={filteredData.length}
+            filteredData={userList}
+            totalCount={totalCount}
           >
             {totalPages > 1 && (
               <PaginationCardList
@@ -93,13 +94,49 @@ const App = () => {
               />
             )}
           </CardList>
-        ) : (
-          /**
-           * Empty Card
-           * Tampil ketika pencarian tidak ditemukan
-           */
-          <EmptyCard searchTerm={searchTerm} />
+        </div>
+      );
+    }
+
+    return <EmptyCard searchTerm={searchTerm} />;
+  };
+
+  return (
+    <div className="mx-auto flex min-h-dvh max-w-lg flex-col overflow-x-hidden">
+      <Header>
+        <SearchBox
+          value={inputValue}
+          onChange={handleSearchChange}
+          inputRef={inputRef}
+          onClear={handleClearSearch}
+          onSubmit={handleFormSubmit}
+          isFetching={isFetching}
+        >
+          <BtnSearchActions
+            value={inputValue}
+            onClear={handleClearSearch}
+            isFetching={isFetching}
+          />
+        </SearchBox>
+
+        {/* notif offline */}
+        {isOffline && (
+          <p
+            role="alert"
+            className="mt-2 text-center text-xs font-semibold text-red-500"
+          >
+            Tidak ada koneksi internet. Periksa jaringan Anda.
+          </p>
         )}
+      </Header>
+
+      <main
+        aria-label="Hasil pencarian blacklist"
+        aria-live="polite"
+        aria-atomic="false"
+        className="flex-1"
+      >
+        {renderContent()}
       </main>
     </div>
   );

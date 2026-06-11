@@ -1,21 +1,39 @@
-import { Search } from 'lucide-react';
+import { memo } from 'react';
 
-const SearchBox = ({ value, onChange, children }) => {
+const SearchBox = memo(({ value, onChange, onSubmit, children, inputRef, isFetching }) => {
   return (
-    <div className="relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <Search className="text-neutral-gray-light h-4 w-4" />
-      </div>
+    <form
+      onSubmit={onSubmit}
+      className="relative w-full"
+    >
+      {/* Label tersembunyi — wajib untuk screen reader */}
+      <label
+        htmlFor="search-blacklist"
+        className="sr-only"
+      >
+        Cari nama atau nomor identitas penyewa
+      </label>
+
       <input
-        type="text"
-        placeholder="Cari nama atau nomor identitas penyewa..."
+        type="search"
+        enterKeyHint="search"
+        id="search-blacklist"
+        name="search"
+        placeholder="Nama atau nomor identitas..."
         value={value}
         onChange={onChange}
-        className="border-border-regular bg-neutral-white text-neutral-element-black placeholder-neutral-gray-light focus:border-brand-primary focus:ring-brand-primary w-full rounded-xl border py-2.5 pr-10 pl-10 text-sm transition-all duration-150 outline-none focus:ring-1"
+        maxLength={50}
+        autoComplete="off"
+        ref={inputRef}
+        disabled={isFetching}
+        aria-busy={isFetching}
+        className={`border-border-regular bg-neutral-white text-neutral-element-black placeholder-neutral-gray-light focus:border-brand-primary focus:ring-brand-primary w-full rounded-xl border py-2.5 pr-12 pl-2 text-base transition-all duration-150 outline-none focus:ring-1 md:text-sm ${isFetching ? 'cursor-not-allowed opacity-50' : ''}`}
       />
+
+      {/* btn actions */}
       {children}
-    </div>
+    </form>
   );
-};
+});
 
 export default SearchBox;

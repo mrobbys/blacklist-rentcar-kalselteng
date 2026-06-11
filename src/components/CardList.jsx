@@ -1,8 +1,9 @@
 import { MapPin, ShieldAlert } from 'lucide-react';
+import { memo } from 'react';
 
-const CardList = ({ filteredData, totalCount, children }) => {
+const CardList = memo(({ filteredData = [], totalCount = 0, children = null }) => {
   return (
-    <div className="space-y-4 px-4 py-6">
+    <div className="space-y-4 px-4 pt-6 pb-12">
       <div className="text-neutral-gray-base flex items-center justify-between text-xs font-semibold">
         <span>Hasil Pencarian</span>
         <span>{totalCount} Data Terdeteksi</span>
@@ -10,7 +11,7 @@ const CardList = ({ filteredData, totalCount, children }) => {
 
       {filteredData.map((item, index) => (
         <div
-          key={`${index}-${item.NO}`}
+          key={index}
           className="border-border-light bg-neutral-white hover:border-brand-primary rounded-xl border p-5 shadow-sm transition-all duration-200"
         >
           {/* Header Card Start */}
@@ -45,7 +46,10 @@ const CardList = ({ filteredData, totalCount, children }) => {
               </div>
             )}
             <div className="flex items-start gap-1.5">
-              <MapPin className="text-neutral-gray-light mt-0.5 h-3.5 w-3.5 shrink-0" />
+              <MapPin
+                className="text-neutral-gray-light mt-0.5 h-3.5 w-3.5 shrink-0"
+                aria-hidden="true"
+              />
               <div>
                 <p className="leading-relaxed">{item.ALAMAT}</p>
                 {(item.KEL || item.KEC) && (
@@ -61,7 +65,10 @@ const CardList = ({ filteredData, totalCount, children }) => {
           {/* Keterangan Start */}
           <div className="rounded border border-red-200 bg-red-50 p-3.5 text-xs text-red-700">
             <div className="mb-1.5 flex items-center gap-1.5 font-bold text-red-800">
-              <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
+              <ShieldAlert
+                className="h-3.5 w-3.5 shrink-0"
+                aria-hidden="true"
+              />
               <span>Detail Pelanggaran:</span>
             </div>
             <p className="leading-relaxed">{item.KETERANGAN || 'Tidak ditemukan.'}</p>
@@ -73,6 +80,6 @@ const CardList = ({ filteredData, totalCount, children }) => {
       {children}
     </div>
   );
-};
+});
 
 export default CardList;
