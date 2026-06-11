@@ -32,7 +32,7 @@ const App = () => {
   // const { totalDatabaseCount, isLoading: isCountLoading, isError: isCountError } = useTotalCount();
 
   // blacklist search custom hooks
-  const { userList, totalCount, isLoading, isPlaceholderData, isError } = useBlacklistSearch(
+  const { userList, totalCount, isLoading, isPlaceholderData, isError, isFetching } = useBlacklistSearch(
     searchTerm,
     currentPage,
     itemsPerPage,
@@ -44,6 +44,13 @@ const App = () => {
   useEffect(() => {
     windowScrollToTop();
   }, [currentPage]);
+
+  // handle form submit
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (isFetching) return;
+    handleSearchSubmit(e);
+  };
 
   // render konten utama
   const renderContent = () => {
@@ -93,11 +100,13 @@ const App = () => {
           onChange={handleSearchChange}
           inputRef={inputRef}
           onClear={handleClearSearch}
-          onSubmit={handleSearchSubmit}
+          onSubmit={handleFormSubmit}
+          isFetching={isFetching}
         >
           <BtnSearchActions
             value={inputValue}
             onClear={handleClearSearch}
+            isFetching={isFetching}
           />
         </SearchBox>
       </Header>
