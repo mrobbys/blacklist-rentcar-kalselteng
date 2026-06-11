@@ -1,10 +1,11 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { debounce } from '../utils';
 
 const useSearchInput = () => {
   const [inputValue, setInputValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const inputRef = useRef(null);
 
   // memoize debounce agar tidak re-render
   const debouncedSetSearch = useMemo(() => {
@@ -23,14 +24,15 @@ const useSearchInput = () => {
     },
     [debouncedSetSearch],
   );
-
+  
   const handleClearSearch = useCallback(() => {
     debouncedSetSearch.cancel();
     setInputValue('');
     setSearchTerm('');
     setCurrentPage(1);
+    inputRef.current?.focus();
   }, [debouncedSetSearch]);
-
+  
   return {
     inputValue,
     handleSearchChange,
@@ -38,6 +40,7 @@ const useSearchInput = () => {
     searchTerm,
     currentPage,
     setCurrentPage,
+    inputRef
   };
 };
 

@@ -16,7 +16,7 @@ const App = () => {
   const itemsPerPage = 10;
 
   // search custom hooks
-  const { inputValue, searchTerm, currentPage, setCurrentPage, handleSearchChange, handleClearSearch } =
+  const { inputValue, searchTerm, currentPage, setCurrentPage, handleSearchChange, handleClearSearch, inputRef } =
     useSearchInput();
 
   // ? kode ini digunakan atau tidak yak🤔
@@ -30,6 +30,7 @@ const App = () => {
     isLoading,
     isPlaceholderData,
     isError,
+
   } = useBlacklistSearch(searchTerm, currentPage, itemsPerPage);
   // hitung total pages
   const totalPages = Math.ceil(totalCount / itemsPerPage);
@@ -86,6 +87,7 @@ const App = () => {
         <SearchBox
           value={inputValue}
           onChange={handleSearchChange}
+          inputRef={inputRef}
         >
           {inputValue && <BtnClearSearch onClick={handleClearSearch} />}
         </SearchBox>

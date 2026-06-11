@@ -31,7 +31,9 @@ const useBlacklistSearch = (searchTerm, currentPage, itemsPerPage = 10) => {
     // jangan fetch jika pencarian kosong
     enabled: !!query,
     staleTime: 1000 * 60 * 5,
-    placeholderData: (prevData) => prevData,
+    placeholderData: (previousData, previousQuery) => {
+      return previousQuery?.queryKey[2] === query ? previousData : undefined;
+    },
   });
 
   return {
