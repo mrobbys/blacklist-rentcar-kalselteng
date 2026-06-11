@@ -2,9 +2,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 // Guard: Pastikan env var tersedia saat aplikasi dijalankan
 if (!BASE_URL) {
-  throw new Error(
-    '[blacklistApi] VITE_BASE_URL tidak ditemukan. Pastikan file .env sudah dikonfigurasi.',
-  );
+  throw new Error('[blacklistApi] VITE_BASE_URL tidak ditemukan. Pastikan file .env sudah dikonfigurasi.');
 }
 
 // Fungsi untuk mendapatkan jumlah data blacklist

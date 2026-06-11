@@ -1,12 +1,21 @@
 const CardListSkeleton = () => {
   return (
-    <div className="space-y-4 px-4 py-6">
-      <div className="text-neutral-gray-base text-xs font-semibold">
+    <div
+      role="status"
+      aria-label="Sedang mencari data, harap tunggu"
+      className="space-y-4 px-4 py-6"
+    >
+      <div
+        className="text-neutral-gray-base text-xs font-semibold"
+        aria-hidden="true"
+      >
         <span>Mencari data...</span>
       </div>
+
       {[...Array(3)].map((_, index) => (
         <div
           key={index}
+          aria-hidden="true"
           className="border-border-light bg-neutral-white animate-pulse space-y-4 rounded-xl border p-5 shadow-sm"
         >
           <div className="flex items-start justify-between">
@@ -24,6 +33,9 @@ const CardListSkeleton = () => {
           <div className="bg-neutral-gray-light/20 h-10 w-full rounded"></div>
         </div>
       ))}
+
+      {/* Teks untuk screen reader — tidak tampil secara visual */}
+      <span className="sr-only">Memuat hasil pencarian...</span>
     </div>
   );
 };

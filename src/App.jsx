@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SearchBox from './components/SearchBox';
 import Header from './components/Header';
 import { windowScrollToTop } from './utils';
@@ -10,10 +10,14 @@ import CardListSkeleton from './components/CardListSkeleton';
 import { useBlacklistSearch } from './hooks/useBlacklist';
 import { useSearchInput } from './hooks/useSearchInput';
 import BtnSearchActions from './components/BtnSearchActions';
+import CardRefetch from './components/CardRefetch';
 
 const App = () => {
   // set items per page
   const itemsPerPage = 10;
+
+  // state untuk notifikasi offline inline
+  const [isOffline, setIsOffline] = useState(false);
 
   // search custom hooks
   const {
@@ -32,7 +36,7 @@ const App = () => {
   // const { totalDatabaseCount, isLoading: isCountLoading, isError: isCountError } = useTotalCount();
 
   // blacklist search custom hooks
-  const { userList, totalCount, isLoading, isPlaceholderData, isError, isFetching } = useBlacklistSearch(
+  const { userList, totalCount, isLoading, isPlaceholderData, isError, isFetching, refetch } = useBlacklistSearch(
     searchTerm,
     currentPage,
     itemsPerPage,
@@ -49,6 +53,11 @@ const App = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (isFetching) return;
+    if (!navigator.onLine) {
+      setIsOffline(true);
+      return;
+    }
+    setIsOffline(false);
     handleSearchSubmit(e);
   };
 
@@ -63,7 +72,7 @@ const App = () => {
     }
 
     if (isError) {
-      return <p className="py-10 text-center text-xs text-red-500">Gagal memuat data. Coba lagi.</p>;
+      return <CardRefetch onClick={() => refetch()} />;
     }
 
     if (userList.length > 0) {
@@ -109,9 +118,26 @@ const App = () => {
             isFetching={isFetching}
           />
         </SearchBox>
+
+        {/* notif offline */}
+        {isOffline && (
+          <p
+            role="alert"
+            className="mt-2 text-center text-xs font-semibold text-red-500"
+          >
+            Tidak ada koneksi internet. Periksa jaringan Anda.
+          </p>
+        )}
       </Header>
 
-      <main className="flex-1">{renderContent()}</main>
+      <main
+        aria-label="Hasil pencarian blacklist"
+        aria-live="polite"
+        aria-atomic="false"
+        className="flex-1"
+      >
+        {renderContent()}
+      </main>
     </div>
   );
 };

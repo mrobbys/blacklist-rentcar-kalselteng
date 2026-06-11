@@ -6,10 +6,18 @@ const SearchBox = memo(({ value, onChange, onSubmit, children, inputRef, isFetch
       onSubmit={onSubmit}
       className="relative w-full"
     >
+      {/* Label tersembunyi — wajib untuk screen reader */}
+      <label
+        htmlFor="search-blacklist"
+        className="sr-only"
+      >
+        Cari nama atau nomor identitas penyewa
+      </label>
+
       <input
         type="search"
         enterKeyHint="search"
-        id="search"
+        id="search-blacklist"
         name="search"
         placeholder="Nama atau nomor identitas..."
         value={value}
@@ -18,6 +26,7 @@ const SearchBox = memo(({ value, onChange, onSubmit, children, inputRef, isFetch
         autoComplete="off"
         ref={inputRef}
         disabled={isFetching}
+        aria-busy={isFetching}
         className={`border-border-regular bg-neutral-white text-neutral-element-black placeholder-neutral-gray-light focus:border-brand-primary focus:ring-brand-primary w-full rounded-xl border py-2.5 pr-12 pl-2 text-base transition-all duration-150 outline-none focus:ring-1 md:text-sm ${isFetching ? 'cursor-not-allowed opacity-50' : ''}`}
       />
 
