@@ -34,7 +34,7 @@ Blacklist Rentcar Kalselteng adalah sebuah aplikasi berbasis web (*Progressive W
 * **Database**: Google Sheets sebagai basis data terpusat.
 
 ### Deployment
-* **Frontend Hosting**: Netlify (Direkomendasikan).
+* **Frontend Hosting**: Netlify.
 * **Backend Hosting**: Infrastruktur cloud internal Google via web app deployment.
 
 ## Prasyarat (Prerequisites)
