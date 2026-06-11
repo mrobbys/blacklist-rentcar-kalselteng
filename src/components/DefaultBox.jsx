@@ -1,6 +1,6 @@
 import { UserRoundSearch } from 'lucide-react';
 
-const DefaultBox = ({ totalBlacklistData = 0, isLoading = false }) => {
+const DefaultBox = () => {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-20">
       <div className="bg-brand-secondary mb-6 flex h-20 w-20 items-center justify-center rounded-full shadow-sm">

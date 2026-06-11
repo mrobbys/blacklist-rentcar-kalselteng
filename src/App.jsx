@@ -29,18 +29,14 @@ const App = () => {
     totalCount,
     isLoading,
     isPlaceholderData,
-    isError: isSearchError,
+    isError,
   } = useBlacklistSearch(searchTerm, currentPage, itemsPerPage);
-
-  // isError dari total count dan blacklist search
-  const isError = isSearchError;
   // hitung total pages
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   // Scroll to top, behavior = 'instant'
-  // useEffect(windowScrollToTop, [currentPage]);
   useEffect(() => {
-    windowScrollToTop('smooth');
+    windowScrollToTop();
   }, [currentPage]);
 
   // render konten utama
@@ -80,11 +76,8 @@ const App = () => {
       );
     }
 
-    if (userList.length === 0) {
-      return <EmptyCard searchTerm={searchTerm} />;
-    }
-
-    return null;
+    // Tidak perlu kondisi if — jika semua kondisi di atas false, pasti userList kosong
+    return <EmptyCard searchTerm={searchTerm} />;
   };
 
   return (
