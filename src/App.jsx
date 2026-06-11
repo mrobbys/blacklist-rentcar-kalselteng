@@ -1,62 +1,91 @@
-import { useState, useMemo, useEffect } from 'react';
-import blacklistData from './data/blacklistData.json';
+import { useEffect } from 'react';
 import SearchBox from './components/SearchBox';
 import Header from './components/Header';
-import { debounce } from './utils';
+import { windowScrollToTop } from './utils';
 import DefaultBox from './components/DefaultBox';
 import BtnClearSearch from './components/BtnClearSearch';
 import CardList from './components/CardList';
 import EmptyCard from './components/EmptyCard';
 import PaginationCardList from './components/PaginationCardList';
- 
+import CardListSkeleton from './components/CardListSkeleton';
+import { useBlacklistSearch } from './hooks/useBlacklist';
+import { useSearchInput } from './hooks/useSearchInput';
+
 const App = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // set items per page
+  const itemsPerPage = 10;
 
-  const itemsPerPage = 5;
+  // search custom hooks
+  const { inputValue, searchTerm, currentPage, setCurrentPage, handleSearchChange, handleClearSearch } =
+    useSearchInput();
 
-  // otomatis scroll ke atas setiap currentPage berubah
+  // ? kode ini digunakan atau tidak yak🤔
+  // total count custom hooks
+  // const { totalDatabaseCount, isLoading: isCountLoading, isError: isCountError } = useTotalCount();
+
+  // blacklist search custom hooks
+  const {
+    userList,
+    totalCount,
+    isLoading,
+    isPlaceholderData,
+    isError: isSearchError,
+  } = useBlacklistSearch(searchTerm, currentPage, itemsPerPage);
+
+  // isError dari total count dan blacklist search
+  const isError = isSearchError;
+  // hitung total pages
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+  // Scroll to top, behavior = 'instant'
+  // useEffect(windowScrollToTop, [currentPage]);
   useEffect(() => {
-    window.scrollTo(0, 0);
+    windowScrollToTop('smooth');
   }, [currentPage]);
 
-  const debouncedSetSearch = useMemo(() => {
-    return debounce((value) => {
-      setSearchTerm(value);
-    });
-  }, []);
+  // render konten utama
+  const renderContent = () => {
+    if (!searchTerm.trim()) {
+      return <DefaultBox />;
+    }
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    debouncedSetSearch(value);
-    setCurrentPage(1);
+    if (isLoading) {
+      return <CardListSkeleton />;
+    }
+
+    if (isError) {
+      return <p className="py-10 text-center text-xs text-red-500">Gagal memuat data. Coba lagi.</p>;
+    }
+
+    if (userList.length > 0) {
+      return (
+        <div
+          className={`transition-opacity duration-200 ${
+            isPlaceholderData ? 'pointer-events-none opacity-25' : 'opacity-100'
+          }`}
+        >
+          <CardList
+            filteredData={userList}
+            totalCount={totalCount}
+          >
+            {totalPages > 1 && (
+              <PaginationCardList
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </CardList>
+        </div>
+      );
+    }
+
+    if (userList.length === 0) {
+      return <EmptyCard searchTerm={searchTerm} />;
+    }
+
+    return null;
   };
-
-  const handleClearSearch = () => {
-    setInputValue('');
-    setSearchTerm('');
-    setCurrentPage(1);
-  };
-
-  const filteredData = useMemo(() => {
-    const query = searchTerm.trim().toLowerCase();
-    if (!query) return [];
-
-    return blacklistData.filter((item) => {
-      const name = item.NAMA ? item.NAMA.toLowerCase() : '';
-      const noIdentitas = item.NO ? String(item.NO).toLowerCase() : '';
-      return name.includes(query) || noIdentitas.includes(query);
-    });
-  }, [searchTerm]);
-
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredData.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredData, currentPage]);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col overflow-x-hidden">
@@ -69,38 +98,7 @@ const App = () => {
         </SearchBox>
       </Header>
 
-      <main className="flex-1">
-        {!searchTerm.trim() ? (
-          /**
-           * Default Box
-           * Tampil ketika input search kosong
-           */
-          <DefaultBox totalBlacklistData={blacklistData.length} />
-        ) : filteredData.length > 0 ? (
-          /**
-           * Card List
-           * Tampil ketika pencarian ditemukan
-           */
-          <CardList
-            filteredData={paginatedData}
-            totalCount={filteredData.length}
-          >
-            {totalPages > 1 && (
-              <PaginationCardList
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            )}
-          </CardList>
-        ) : (
-          /**
-           * Empty Card
-           * Tampil ketika pencarian tidak ditemukan
-           */
-          <EmptyCard searchTerm={searchTerm} />
-        )}
-      </main>
+      <main className="flex-1">{renderContent()}</main>
     </div>
   );
 };

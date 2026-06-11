@@ -6,7 +6,7 @@
 export function debounce(func, delay = 500) {
   let timer;
 
-  return function (...args) {
+  const debounced = function (...args) {
     const context = this;
     clearTimeout(timer);
 
@@ -14,4 +14,17 @@ export function debounce(func, delay = 500) {
       func.apply(context, args);
     }, delay);
   };
+
+  debounced.cancel = () => {
+    clearTimeout(timer);
+  };
+
+  return debounced;
+}
+
+export function windowScrollToTop(behavior = 'instant') {
+  window.scrollTo({
+    top: 0,
+    behavior: behavior,
+  });
 }

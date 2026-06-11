@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
+import { memo } from 'react';
 
-const BtnClearSearch = ({ onClick }) => {
+const BtnClearSearch = memo(({ onClick }) => {
   return (
     <button
       type="button"
@@ -12,6 +13,6 @@ const BtnClearSearch = ({ onClick }) => {
       </div>
     </button>
   );
-};
+});
 
 export default BtnClearSearch;

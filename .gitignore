@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 .agy-rules.md
+.env

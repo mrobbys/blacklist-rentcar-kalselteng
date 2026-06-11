@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
+import { memo } from 'react';
 
-const SearchBox = ({ value, onChange, children }) => {
+const SearchBox = memo(({ value, onChange, children }) => {
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -11,11 +12,12 @@ const SearchBox = ({ value, onChange, children }) => {
         placeholder="Cari nama atau nomor identitas penyewa..."
         value={value}
         onChange={onChange}
+        maxLength={50}
         className="border-border-regular bg-neutral-white text-neutral-element-black placeholder-neutral-gray-light focus:border-brand-primary focus:ring-brand-primary w-full rounded-xl border py-2.5 pr-10 pl-10 text-sm transition-all duration-150 outline-none focus:ring-1"
       />
       {children}
     </div>
   );
-};
+});
 
 export default SearchBox;
