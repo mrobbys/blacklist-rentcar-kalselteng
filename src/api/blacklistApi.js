@@ -1,28 +1,27 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
+// Guard: Pastikan env var tersedia saat aplikasi dijalankan
+if (!BASE_URL) {
+  throw new Error('[blacklistApi] VITE_BASE_URL tidak ditemukan. Pastikan file .env sudah dikonfigurasi.');
+}
+
 // Fungsi untuk mendapatkan jumlah data blacklist
 const fetchTotalDataCount = async () => {
-  const response = await fetch(`${BASE_URL}`);
+  const response = await fetch(BASE_URL);
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error(`Gagal mengambil total data: ${response.status} ${response.statusText}`);
   }
-  return await response.json();
+  return response.json();
 };
 
 // Fungsi untuk mendapatkan data blacklist berdasarkan pencarian
 const fetchSearchData = async (search, page, limit) => {
-  const params = {
-    search: search,
-    page: page,
-    limit: limit,
-  };
-  const queryString = new URLSearchParams(params).toString();
-  const fetchURL = `${BASE_URL}?${queryString}`;
-  const response = await fetch(fetchURL);
+  const queryString = new URLSearchParams({ search, page, limit }).toString();
+  const response = await fetch(`${BASE_URL}?${queryString}`);
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error(`Gagal mencari data: ${response.status} ${response.statusText}`);
   }
-  return await response.json();
+  return response.json();
 };
 
 export { fetchTotalDataCount, fetchSearchData };

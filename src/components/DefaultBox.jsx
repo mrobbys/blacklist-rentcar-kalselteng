@@ -1,6 +1,6 @@
 import { UserRoundSearch } from 'lucide-react';
 
-const DefaultBox = ({ totalBlacklistData = 0, isLoading = false }) => {
+const DefaultBox = () => {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-20">
       <div className="bg-brand-secondary mb-6 flex h-20 w-20 items-center justify-center rounded-full shadow-sm">
@@ -8,7 +8,7 @@ const DefaultBox = ({ totalBlacklistData = 0, isLoading = false }) => {
       </div>
       <h2 className="text-brand-primary text-center text-lg font-bold">Verifikasi Calon Penyewa</h2>
       <p className="text-neutral-gray-base mt-1 text-center text-sm leading-relaxed">
-        Silakan masukkan nama lengkap atau nomor identitas calon penyewa mobil pada kolom pencarian di atas untuk
+        Silakan masukkan nama lengkap atau nomor identitas (NIK/SIM) calon penyewa pada kolom pencarian di atas untuk
         melakukan pemindaian rekam jejak.
       </p>
 

@@ -1,47 +1,65 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SearchBox from './components/SearchBox';
 import Header from './components/Header';
 import { windowScrollToTop } from './utils';
 import DefaultBox from './components/DefaultBox';
-import BtnClearSearch from './components/BtnClearSearch';
 import CardList from './components/CardList';
 import EmptyCard from './components/EmptyCard';
 import PaginationCardList from './components/PaginationCardList';
 import CardListSkeleton from './components/CardListSkeleton';
 import { useBlacklistSearch } from './hooks/useBlacklist';
 import { useSearchInput } from './hooks/useSearchInput';
+import BtnSearchActions from './components/BtnSearchActions';
+import CardRefetch from './components/CardRefetch';
 
 const App = () => {
   // set items per page
   const itemsPerPage = 10;
 
+  // state untuk notifikasi offline inline
+  const [isOffline, setIsOffline] = useState(false);
+
   // search custom hooks
-  const { inputValue, searchTerm, currentPage, setCurrentPage, handleSearchChange, handleClearSearch } =
-    useSearchInput();
+  const {
+    inputValue,
+    searchTerm,
+    currentPage,
+    setCurrentPage,
+    handleSearchChange,
+    handleClearSearch,
+    inputRef,
+    handleSearchSubmit,
+  } = useSearchInput();
 
   // ? kode ini digunakan atau tidak yak🤔
   // total count custom hooks
   // const { totalDatabaseCount, isLoading: isCountLoading, isError: isCountError } = useTotalCount();
 
   // blacklist search custom hooks
-  const {
-    userList,
-    totalCount,
-    isLoading,
-    isPlaceholderData,
-    isError: isSearchError,
-  } = useBlacklistSearch(searchTerm, currentPage, itemsPerPage);
-
-  // isError dari total count dan blacklist search
-  const isError = isSearchError;
+  const { userList, totalCount, isLoading, isPlaceholderData, isError, isFetching, refetch } = useBlacklistSearch(
+    searchTerm,
+    currentPage,
+    itemsPerPage,
+  );
   // hitung total pages
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   // Scroll to top, behavior = 'instant'
-  // useEffect(windowScrollToTop, [currentPage]);
   useEffect(() => {
-    windowScrollToTop('smooth');
+    windowScrollToTop();
   }, [currentPage]);
+
+  // handle form submit
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (isFetching) return;
+    if (!navigator.onLine) {
+      setIsOffline(true);
+      return;
+    }
+    setIsOffline(false);
+    handleSearchSubmit(e);
+  };
 
   // render konten utama
   const renderContent = () => {
@@ -54,7 +72,7 @@ const App = () => {
     }
 
     if (isError) {
-      return <p className="py-10 text-center text-xs text-red-500">Gagal memuat data. Coba lagi.</p>;
+      return <CardRefetch onClick={() => refetch()} />;
     }
 
     if (userList.length > 0) {
@@ -80,11 +98,7 @@ const App = () => {
       );
     }
 
-    if (userList.length === 0) {
-      return <EmptyCard searchTerm={searchTerm} />;
-    }
-
-    return null;
+    return <EmptyCard searchTerm={searchTerm} />;
   };
 
   return (
@@ -93,12 +107,37 @@ const App = () => {
         <SearchBox
           value={inputValue}
           onChange={handleSearchChange}
+          inputRef={inputRef}
+          onClear={handleClearSearch}
+          onSubmit={handleFormSubmit}
+          isFetching={isFetching}
         >
-          {inputValue && <BtnClearSearch onClick={handleClearSearch} />}
+          <BtnSearchActions
+            value={inputValue}
+            onClear={handleClearSearch}
+            isFetching={isFetching}
+          />
         </SearchBox>
+
+        {/* notif offline */}
+        {isOffline && (
+          <p
+            role="alert"
+            className="mt-2 text-center text-xs font-semibold text-red-500"
+          >
+            Tidak ada koneksi internet. Periksa jaringan Anda.
+          </p>
+        )}
       </Header>
 
-      <main className="flex-1">{renderContent()}</main>
+      <main
+        aria-label="Hasil pencarian blacklist"
+        aria-live="polite"
+        aria-atomic="false"
+        className="flex-1"
+      >
+        {renderContent()}
+      </main>
     </div>
   );
 };

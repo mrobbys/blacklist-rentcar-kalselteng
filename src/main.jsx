@@ -11,6 +11,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       // Retry 1x jika gagal (default 3x, terlalu banyak untuk Google Apps Script)
       retry: 1,
+      retryDelay: 2000,
     },
   },
 });

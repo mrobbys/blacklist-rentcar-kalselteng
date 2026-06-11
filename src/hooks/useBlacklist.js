@@ -25,13 +25,15 @@ export const blacklistKeys = {
 const useBlacklistSearch = (searchTerm, currentPage, itemsPerPage = 10) => {
   const query = searchTerm.trim().toLowerCase();
 
-  const { data, isPending, isFetching, isError, isPlaceholderData } = useQuery({
+  const { data, isPending, isFetching, isError, isPlaceholderData, refetch } = useQuery({
     queryKey: blacklistKeys.search(query, currentPage, itemsPerPage),
     queryFn: () => getSearchDataService(query, currentPage, itemsPerPage),
     // jangan fetch jika pencarian kosong
     enabled: !!query,
     staleTime: 1000 * 60 * 5,
-    placeholderData: (prevData) => prevData,
+    placeholderData: (previousData, previousQuery) => {
+      return previousQuery?.queryKey[2] === query ? previousData : undefined;
+    },
   });
 
   return {
@@ -39,6 +41,7 @@ const useBlacklistSearch = (searchTerm, currentPage, itemsPerPage = 10) => {
     isFetching,
     isPlaceholderData,
     isError,
+    refetch,
     userList: data?.data ?? [],
     totalCount: data?.totalCount ?? 0,
   };
