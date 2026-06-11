@@ -25,3 +25,4 @@ dist-ssr
 
 .agy-rules.md
 .env
+/dev-dist
