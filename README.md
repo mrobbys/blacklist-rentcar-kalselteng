@@ -26,7 +26,7 @@ Blacklist Rentcar Kalselteng adalah sebuah aplikasi berbasis web (*Progressive W
 * **Build Tool**: Vite
 * **Styling**: Tailwind CSS
 * **Data Fetching & Caching**: TanStack Query (React Query)
-* **Ikonografi**: Lucide React
+* **Icon**: Lucide React
 * **PWA Engine**: `vite-plugin-pwa`
 
 ### Backend
@@ -34,7 +34,7 @@ Blacklist Rentcar Kalselteng adalah sebuah aplikasi berbasis web (*Progressive W
 * **Database**: Google Sheets sebagai basis data terpusat.
 
 ### Deployment
-* **Frontend Hosting**: Netlify (Direkomendasikan).
+* **Frontend Hosting**: Netlify.
 * **Backend Hosting**: Infrastruktur cloud internal Google via web app deployment.
 
 ## Prasyarat (Prerequisites)
@@ -73,24 +73,6 @@ Aplikasi ini membutuhkan *environment variables* yang berisi kredensial peladen 
 VITE_BASE_URL=https://script.google.com/macros/s/ID_DEPLOYMENT_ANDA/exec
 ```
 *Catatan: Ganti nilai variabel di atas dengan URL eksekusi (Web App URL) dari publikasi Google Apps Script yang valid.*
-
-## Panduan Deployment
-
-Proyek ini telah dikonfigurasi penuh agar kompatibel dengan lingkungan *deployment* modern seperti Netlify.
-
-1. **Simulasi Build Lokal**
-   Pastikan tidak ada *error* pada saat kompilasi kode:
-   ```bash
-   npm run build
-   ```
-2. **Proses Netlify Deployment**
-   * Buat situs baru di panel administrasi Netlify dan hubungkan dengan *repository* GitHub ini.
-   * Pastikan setelan kompilasinya adalah sebagai berikut:
-     * **Build command**: `npm run build`
-     * **Publish directory**: `dist`
-   * Masuk ke menu **Site configuration** > **Environment variables**.
-   * Tambahkan key `VITE_BASE_URL` dan masukkan tautan API eksekusi (*Web App URL*) dari peladen GAS Anda.
-   * Lakukan *Trigger Deploy*. Aplikasi web siap digunakan.
 
 ## Struktur Google Sheets
 
