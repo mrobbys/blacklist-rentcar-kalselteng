@@ -21,6 +21,7 @@ const CardListSkeleton = () => {
             <div className="bg-neutral-gray-light/20 h-3 w-5/6 rounded"></div>
             <div className="bg-neutral-gray-light/20 h-3 w-2/3 rounded"></div>
           </div>
+          <div className="bg-neutral-gray-light/20 h-10 w-full rounded"></div>
         </div>
       ))}
     </div>

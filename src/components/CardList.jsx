@@ -1,6 +1,6 @@
 import { MapPin, ShieldAlert } from 'lucide-react';
 
-const CardList = ({ filteredData, totalCount, children }) => {
+const CardList = ({ filteredData = [], totalCount = 0, children = null }) => {
   return (
     <div className="space-y-4 px-4 py-6">
       <div className="text-neutral-gray-base flex items-center justify-between text-xs font-semibold">
@@ -10,7 +10,7 @@ const CardList = ({ filteredData, totalCount, children }) => {
 
       {filteredData.map((item, index) => (
         <div
-          key={item.NO || index}
+          key={index}
           className="border-border-light bg-neutral-white hover:border-brand-primary rounded-xl border p-5 shadow-sm transition-all duration-200"
         >
           {/* Header Card Start */}
