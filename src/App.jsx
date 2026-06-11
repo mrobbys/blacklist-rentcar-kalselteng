@@ -3,35 +3,40 @@ import SearchBox from './components/SearchBox';
 import Header from './components/Header';
 import { windowScrollToTop } from './utils';
 import DefaultBox from './components/DefaultBox';
-import BtnClearSearch from './components/BtnClearSearch';
 import CardList from './components/CardList';
 import EmptyCard from './components/EmptyCard';
 import PaginationCardList from './components/PaginationCardList';
 import CardListSkeleton from './components/CardListSkeleton';
 import { useBlacklistSearch } from './hooks/useBlacklist';
 import { useSearchInput } from './hooks/useSearchInput';
+import BtnSearchActions from './components/BtnSearchActions';
 
 const App = () => {
   // set items per page
   const itemsPerPage = 10;
 
   // search custom hooks
-  const { inputValue, searchTerm, currentPage, setCurrentPage, handleSearchChange, handleClearSearch, inputRef } =
-    useSearchInput();
+  const {
+    inputValue,
+    searchTerm,
+    currentPage,
+    setCurrentPage,
+    handleSearchChange,
+    handleClearSearch,
+    inputRef,
+    handleSearchSubmit,
+  } = useSearchInput();
 
   // ? kode ini digunakan atau tidak yak🤔
   // total count custom hooks
   // const { totalDatabaseCount, isLoading: isCountLoading, isError: isCountError } = useTotalCount();
 
   // blacklist search custom hooks
-  const {
-    userList,
-    totalCount,
-    isLoading,
-    isPlaceholderData,
-    isError,
-
-  } = useBlacklistSearch(searchTerm, currentPage, itemsPerPage);
+  const { userList, totalCount, isLoading, isPlaceholderData, isError } = useBlacklistSearch(
+    searchTerm,
+    currentPage,
+    itemsPerPage,
+  );
   // hitung total pages
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
@@ -77,7 +82,6 @@ const App = () => {
       );
     }
 
-    // Tidak perlu kondisi if — jika semua kondisi di atas false, pasti userList kosong
     return <EmptyCard searchTerm={searchTerm} />;
   };
 
@@ -88,8 +92,13 @@ const App = () => {
           value={inputValue}
           onChange={handleSearchChange}
           inputRef={inputRef}
+          onClear={handleClearSearch}
+          onSubmit={handleSearchSubmit}
         >
-          {inputValue && <BtnClearSearch onClick={handleClearSearch} />}
+          <BtnSearchActions
+            value={inputValue}
+            onClear={handleClearSearch}
+          />
         </SearchBox>
       </Header>
 

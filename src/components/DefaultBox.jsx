@@ -8,7 +8,7 @@ const DefaultBox = () => {
       </div>
       <h2 className="text-brand-primary text-center text-lg font-bold">Verifikasi Calon Penyewa</h2>
       <p className="text-neutral-gray-base mt-1 text-center text-sm leading-relaxed">
-        Silakan masukkan nama lengkap atau nomor identitas calon penyewa mobil pada kolom pencarian di atas untuk
+        Silakan masukkan nama lengkap atau nomor identitas (NIK/SIM) calon penyewa pada kolom pencarian di atas untuk
         melakukan pemindaian rekam jejak.
       </p>
 

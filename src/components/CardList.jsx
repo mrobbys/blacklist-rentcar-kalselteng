@@ -2,7 +2,7 @@ import { MapPin, ShieldAlert } from 'lucide-react';
 
 const CardList = ({ filteredData = [], totalCount = 0, children = null }) => {
   return (
-    <div className="space-y-4 px-4 py-6">
+    <div className="space-y-4 px-4 pt-6 pb-12">
       <div className="text-neutral-gray-base flex items-center justify-between text-xs font-semibold">
         <span>Hasil Pencarian</span>
         <span>{totalCount} Data Terdeteksi</span>

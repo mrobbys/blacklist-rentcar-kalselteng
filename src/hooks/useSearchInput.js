@@ -1,5 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
-import { debounce } from '../utils';
+import { useState, useCallback, useRef } from 'react';
 
 const useSearchInput = () => {
   const [inputValue, setInputValue] = useState('');
@@ -7,40 +6,41 @@ const useSearchInput = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const inputRef = useRef(null);
 
-  // memoize debounce agar tidak re-render
-  const debouncedSetSearch = useMemo(() => {
-    return debounce((value) => {
-      setSearchTerm(value);
-    });
+  const handleSearchChange = useCallback((e) => {
+    const value = e.target.value;
+    const cleanValue = value.replace(/[^a-zA-Z0-9\s+\-.,']/g, '');
+    setInputValue(cleanValue);
   }, []);
 
-  const handleSearchChange = useCallback(
+  const handleSearchSubmit = useCallback(
     (e) => {
-      const value = e.target.value;
-      const cleanValue = value.replace(/[^a-zA-Z0-9\s+\-.,']/g, '');
-      setInputValue(cleanValue);
-      debouncedSetSearch(cleanValue);
+      if (e) e.preventDefault();
+      setSearchTerm(inputValue);
       setCurrentPage(1);
+
+      if (inputRef && inputRef.current) {
+        inputRef.current.blur();
+      }
     },
-    [debouncedSetSearch],
+    [inputValue],
   );
-  
+
   const handleClearSearch = useCallback(() => {
-    debouncedSetSearch.cancel();
     setInputValue('');
     setSearchTerm('');
     setCurrentPage(1);
     inputRef.current?.focus();
-  }, [debouncedSetSearch]);
-  
+  }, []);
+
   return {
     inputValue,
     handleSearchChange,
+    handleSearchSubmit,
     handleClearSearch,
     searchTerm,
     currentPage,
     setCurrentPage,
-    inputRef
+    inputRef,
   };
 };
 
