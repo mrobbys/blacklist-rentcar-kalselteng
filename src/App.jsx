@@ -102,7 +102,7 @@ const App = () => {
   };
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-lg flex-col overflow-x-hidden">
+    <div className="mx-auto flex min-h-dvh max-w-lg flex-col overflow-x-hidden pt-[env(safe-area-inset-top)]">
       <Header>
         <SearchBox
           value={inputValue}
