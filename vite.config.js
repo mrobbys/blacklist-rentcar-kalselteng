@@ -12,14 +12,14 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png'],
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
       manifest: {
         name: 'Blacklist Rentcar Kalselteng',
         short_name: 'BlacklistRentcar',
         description: 'Sistem pencarian riwayat penyewa bermasalah untuk wilayah Kalselteng.',
-        background_color: '#1267dd',
-        theme_color: '#1267dd',
+        background_color: '#ffffff',
+        theme_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
         icons: [
