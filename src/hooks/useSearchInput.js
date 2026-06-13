@@ -12,18 +12,15 @@ const useSearchInput = () => {
     setInputValue(cleanValue);
   }, []);
 
-  const handleSearchSubmit = useCallback(
-    (e) => {
-      if (e) e.preventDefault();
-      setSearchTerm(inputValue);
-      setCurrentPage(1);
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    setSearchTerm(inputValue);
+    setCurrentPage(1);
 
-      if (inputRef && inputRef.current) {
-        inputRef.current.blur();
-      }
-    },
-    [inputValue],
-  );
+    if (inputRef && inputRef.current) {
+      inputRef.current.blur();
+    }
+  };
 
   const handleClearSearch = useCallback(() => {
     setInputValue('');
