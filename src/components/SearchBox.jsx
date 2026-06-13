@@ -1,6 +1,4 @@
-import { memo } from 'react';
-
-const SearchBox = memo(({ value, onChange, onSubmit, children, inputRef, isFetching }) => {
+const SearchBox = ({ value, onChange, onSubmit, children, inputRef, isFetching }) => {
   return (
     <form
       onSubmit={onSubmit}
@@ -34,6 +32,6 @@ const SearchBox = memo(({ value, onChange, onSubmit, children, inputRef, isFetch
       {children}
     </form>
   );
-});
+};
 
 export default SearchBox;
